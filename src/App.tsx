@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+
+type Animal = {
+  id: number;
+  name: string;
+  icon: string;
+}
+
+
 
 function App() {
+  const [animals, setAnimals] = useState<Animal[]>([{ id: 0, name: "", icon: ""}])
+
+  useEffect(() => {
+    (
+      async () => {
+        const data = await axios.get("http://localhost:8080")
+        setAnimals(data.data)
+      }
+    )()
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
+    <div>
+      {animals.map(animal => (
+        <p key={animal.id}>
+          <span>{animal.name}</span>
+          <span>{animal.icon}</span>
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      ))}
     </div>
   );
 }
